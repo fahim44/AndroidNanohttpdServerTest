@@ -16,9 +16,10 @@
         android:textStyle="bold"
         android:textSize="20sp"
         />
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="300dp"
         android:layout_below="@id/tv_ip">
         <TextView
             android:id="@+id/tv_perameters"
@@ -26,7 +27,12 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:text=""/>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
+    <com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:id="@+id/graph"
+        android:layout_below="@id/scrollView"/>
 
 </RelativeLayout>

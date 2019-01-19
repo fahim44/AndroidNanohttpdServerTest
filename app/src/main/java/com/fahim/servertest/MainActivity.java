@@ -1,9 +1,13 @@
 package com.fahim.servertest;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -12,8 +16,6 @@ import java.net.SocketException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 
 import fi.iki.elonen.NanoHTTPD;
 
@@ -26,6 +28,14 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView tv_ip, tv_perameters;
 
+    private GraphView graphView;
+
+    private int[] value1_arr = new int[256];
+    private long[] time_arr = new long[256];
+    long start_time = 0;
+
+    private int counter =0;
+
     private WebServer server;
     /** Called when the activity is first created. */
     @Override
@@ -36,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         tv_ip = findViewById(R.id.tv_ip);
         tv_perameters = findViewById(R.id.tv_perameters);
+        graphView = findViewById(R.id.graph);
 
         //getIp();
 
@@ -45,8 +56,14 @@ public class MainActivity extends AppCompatActivity {
         try {
             server.start();
         } catch(IOException ioe) {
+            tv_perameters.append("\n===================\n");
+            tv_perameters.append("The server could not start.");
+            tv_perameters.append("\n===================\n");
             Log.w(TAG, "The server could not start.");
         }
+        tv_perameters.append("\n===================\n");
+        tv_perameters.append("Web server initialized.");
+        tv_perameters.append("\n===================\n");
         Log.w(TAG, "Web server initialized.");
     }
 
@@ -88,6 +105,18 @@ public class MainActivity extends AppCompatActivity {
         //return deviceIpAddress;
     }
 
+    private void drawGraph(){
+        DataPoint[] dataPoints = new DataPoint[256];
+        for(int i=0;i<256;i++){
+            dataPoints[i] = new DataPoint(time_arr[i],value1_arr[i]);
+        }
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(dataPoints);
+        graphView.addSeries(series);
+
+        server.stop();
+        server = null;
+    }
+
     private class WebServer extends NanoHTTPD {
 
         WebServer()
@@ -107,9 +136,22 @@ public class MainActivity extends AppCompatActivity {
                 }
             }*/
             String postBody = session.getQueryParameterString();
+            postBody = postBody.replace("sensor_reading=","");
+            String[] values = postBody.split(",");
+
+            if(counter>=256)
+                return newFixedLengthResponse( "" );
+            if(counter==0)
+                start_time = System.currentTimeMillis();
+            value1_arr[counter] = Integer.parseInt(values[0]);
+            time_arr[counter] = System.currentTimeMillis() - start_time;
+            counter++;
 
             runOnUiThread(()->
-                    tv_perameters.append("\n\n"+DateFormat.getDateTimeInstance().format(new Date())+" : "+postBody));
+                    tv_perameters.append("\n\n"+DateFormat.getDateTimeInstance().format(new Date())+" : "+values[0]));
+            if(counter>=256)
+                runOnUiThread(()->
+                        drawGraph());
 
             /*String[] arr = postBody.split(",");*/
             Log.w(TAG, postBody);
