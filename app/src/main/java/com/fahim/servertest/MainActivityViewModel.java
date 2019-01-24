@@ -29,10 +29,6 @@ public class MainActivityViewModel extends AndroidViewModel implements WebServer
 
     public MainActivityViewModel(@NonNull Application application) {
         super(application);
-
-        getHeartbeat1();
-        getHeartbeat2();
-
         Handler handler = new Handler(getApplication().getMainLooper());
         server = new WebServer(Integer.parseInt(getApplication().getString(R.string.port)),this,handler);
         try {
@@ -103,13 +99,13 @@ public class MainActivityViewModel extends AndroidViewModel implements WebServer
     @Override
     public void onResponse(String from, long time, String[] values) {
         if(from.equalsIgnoreCase(getApplication().getString(R.string.firstGraphKey)))
-            handle1stGraphdata(time,values);
+            handle1stGraphData(time,values);
         else if(from.equalsIgnoreCase(getApplication().getString(R.string.secondGraphKey)))
-            handle2ndGraphdata(time,values);
+            handle2ndGraphData(time,values);
 
     }
 
-    private void handle1stGraphdata(long time,String[] values){
+    private void handle1stGraphData(long time, String[] values){
         getGraph1Series().getValue().appendData(new DataPoint(time,Integer.parseInt(values[0])),true,100000);
         getGraph1Series().setValue(getGraph1Series().getValue());
 
@@ -123,7 +119,7 @@ public class MainActivityViewModel extends AndroidViewModel implements WebServer
 
 
 
-    private void handle2ndGraphdata(long time,String[] values){
+    private void handle2ndGraphData(long time, String[] values){
         getGraph2Series().getValue().appendData(new DataPoint(time,Integer.parseInt(values[0])),true,100000);
         getGraph2Series().setValue(getGraph2Series().getValue());
 

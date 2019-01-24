@@ -17,10 +17,10 @@ public class MainActivity extends AppCompatActivity {
         MainActivityViewModel viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         viewModel.init();
 
+        binding.setLifecycleOwner(this);
         binding.setViewModel(viewModel);
 
         binding.graph1.addSeries(viewModel.getGraph1Series().getValue());
-
         binding.graph2.addSeries(viewModel.getGraph2Series().getValue());
 
         viewModel.getGraph1Series().observe(this, series ->
@@ -29,10 +29,5 @@ public class MainActivity extends AppCompatActivity {
         viewModel.getGraph2Series().observe(this, series ->
                 binding.graph2.onDataChanged(false,false));
 
-        viewModel.getHeartbeat1().observe(this, string ->
-                binding.tvHeartbeat1.setText(string));
-
-        viewModel.getHeartbeat2().observe(this, string ->
-                binding.tvHeartbeat2.setText(string));
     }
 }
