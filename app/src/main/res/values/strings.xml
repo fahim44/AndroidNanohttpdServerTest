@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Server test</string>
+
+    <string name="port">7777</string>
+
+    <string name="firstGraphKey">x</string>
+    <string name="secondGraphKey">y</string>
+
+    <string name="limit">256</string>
 </resources>

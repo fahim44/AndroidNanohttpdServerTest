@@ -1,38 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.fahim.servertest.MainActivityViewModel"/>
+    </data>
 
-    <TextView
-        android:id="@+id/tv_ip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hotspot IP: "
-        android:layout_centerHorizontal="true"
-        android:layout_margin="10dp"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        />
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/scrollView"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_below="@id/tv_ip">
-        <TextView
-            android:id="@+id/tv_perameters"
+        android:layout_height="match_parent">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:text=""/>
-    </androidx.core.widget.NestedScrollView>
+            android:layout_height="wrap_content"
+            tools:context=".MainActivity"
+            android:layout_margin="10dp">
+            <TextView
+                android:id="@+id/ip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.ipAddress}"
+                android:layout_centerHorizontal="true"
+                android:textStyle="bold"
+                android:textSize="20sp" />
 
-    <com.jjoe64.graphview.GraphView
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:id="@+id/graph"
-        android:layout_below="@id/scrollView"/>
+            <com.jjoe64.graphview.GraphView
+                android:id="@+id/graph1"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_below="@id/ip"
+                android:padding="10dp"/>
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/tv_heartbeat1"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_below="@id/graph1"
+                android:layout_margin="10dp"
+                android:text="@{viewModel.heartbeat1}"
+                android:textColor="@android:color/holo_red_dark"
+                android:textStyle="bold"
+                android:textSize="20sp"/>
+
+            <com.jjoe64.graphview.GraphView
+                android:id="@+id/graph2"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_below="@id/tv_heartbeat1" />
+
+            <TextView
+                android:id="@+id/tv_heartbeat2"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_below="@id/graph2"
+                android:layout_margin="10dp"
+                android:text="@{viewModel.heartbeat2}"
+                android:textColor="@android:color/holo_red_dark"
+                android:textStyle="bold"
+                android:textSize="20sp"/>
+        </RelativeLayout>
+    </ScrollView>
+</layout>
