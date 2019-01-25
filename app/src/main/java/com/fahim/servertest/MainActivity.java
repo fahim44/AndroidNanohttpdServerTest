@@ -23,6 +23,16 @@ public class MainActivity extends AppCompatActivity {
         binding.graph1.addSeries(viewModel.getGraph1Series().getValue());
         binding.graph2.addSeries(viewModel.getGraph2Series().getValue());
 
+        binding.graph1.getViewport().setXAxisBoundsManual(true);
+        binding.graph1.getViewport().setMinX(0);
+        binding.graph1.getViewport().setMaxX(2000);
+        binding.graph1.getViewport().setScalable(true);
+
+        binding.graph2.getViewport().setXAxisBoundsManual(true);
+        binding.graph2.getViewport().setMinX(0);
+        binding.graph2.getViewport().setMaxX(2000);
+        binding.graph2.getViewport().setScalable(true);
+
         viewModel.getGraph1Series().observe(this, series ->
                 binding.graph1.onDataChanged(false,false));
 
