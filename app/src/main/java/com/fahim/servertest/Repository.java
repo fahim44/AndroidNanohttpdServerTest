@@ -1,17 +1,22 @@
 package com.fahim.servertest;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.widget.Toast;
 
+import com.fahim.servertest.Calculation.Calculation;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
-public class Repository implements WebServerCallback {
+public class Repository implements WebServerCallback, CalculationCallback {
 
     private MutableLiveData<String> ipAddress;
 
@@ -28,10 +33,12 @@ public class Repository implements WebServerCallback {
 
     private Context context;
 
+    private Handler handler;
+
     Repository(Context context){
         this.context = context;
 
-        Handler handler = new Handler(context.getMainLooper());
+        handler = new Handler(context.getMainLooper());
         server = new WebServer(Integer.parseInt(context.getString(R.string.port)),this,handler);
         try {
             server.start();
@@ -109,13 +116,11 @@ public class Repository implements WebServerCallback {
 
         dataModel1.addData(values);
         if(dataModel1.reachedlimit()){
-            getHeartbeat1().setValue(Integer.toString(TaskUtils.calculation(dataModel1.getAllData())));
+            new Calculation(context,handler,this,1).calculate(dataModel1.getppg1(),dataModel1.getaccX(),dataModel1.getaccY(),dataModel1.getaccZ());
             dataModel1.resetAllData();
         }
 
     }
-
-
 
     private void handle2ndGraphData(long time, String[] values){
         getGraph2Series().getValue().appendData(new DataPoint(time,Integer.parseInt(values[0])),true,100000);
@@ -123,8 +128,21 @@ public class Repository implements WebServerCallback {
 
         dataModel2.addData(values);
         if(dataModel2.reachedlimit()){
-            getHeartbeat2().setValue(String.valueOf(TaskUtils.calculation(dataModel2.getAllData())));
+           // getHeartbeat2().setValue(String.valueOf(TaskUtils.calculation(dataModel2.getAllData())));
+            new Calculation(context,handler,this,2).calculate(dataModel2.getppg1(),dataModel2.getaccX(),dataModel2.getaccY(),dataModel2.getaccZ());
             dataModel2.resetAllData();
+        }
+    }
+
+    @Override
+    public void onCompleteCalculation(int type, double result) {
+        if(type==1){
+            dataModel1.reseltdatas();
+            getHeartbeat1().setValue(Double.toString(result));
+        }
+        else if(type==2){
+            dataModel2.reseltdatas();
+            getHeartbeat2().setValue(Double.toString(result));
         }
     }
 }

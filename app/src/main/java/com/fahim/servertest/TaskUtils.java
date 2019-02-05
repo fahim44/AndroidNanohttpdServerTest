@@ -1,6 +1,9 @@
 package com.fahim.servertest;
 
 import android.content.Context;
+import android.widget.Toast;
+
+import com.fahim.servertest.Calculation.DSP;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -39,7 +42,5 @@ public class TaskUtils {
 
 
     //////////////////////////////////////////////////////////////////////////
-    static int calculation(List<int[]> allData){
-        return 0;
-    }
+
 }
