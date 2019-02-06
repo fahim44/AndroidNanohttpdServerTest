@@ -35,6 +35,8 @@ public class Repository implements WebServerCallback, CalculationCallback {
 
     private Handler handler;
 
+    private static final Object lockObject = new Object();
+
     Repository(Context context){
         this.context = context;
 
@@ -103,10 +105,12 @@ public class Repository implements WebServerCallback, CalculationCallback {
 
     @Override
     public void onResponse(String from, long time, String[] values) {
-        if(from.equalsIgnoreCase(context.getString(R.string.firstGraphKey)))
-            handle1stGraphData(time,values);
-        else if(from.equalsIgnoreCase(context.getString(R.string.secondGraphKey)))
-            handle2ndGraphData(time,values);
+        synchronized (lockObject) {
+            if (from.equalsIgnoreCase(context.getString(R.string.firstGraphKey)))
+                handle1stGraphData(time, values);
+            else if (from.equalsIgnoreCase(context.getString(R.string.secondGraphKey)))
+                handle2ndGraphData(time, values);
+        }
 
     }
 
